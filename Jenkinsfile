@@ -31,13 +31,23 @@ pipeline {
         stage('Docker build and push') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'ba705d80-36e5-44ca-ac03-e5e66d08c970', toolName: 'docker') {
+                    withDockerRegistry(credentialsId: '8491bc31-eedd-4abc-a070-d0c0e0aec1c5', toolName: 'Docker') {
                         // Build the Docker image
                         sh 'docker build -t demonodejs .'
                         // Tag the Docker image
-                        sh 'docker tag demonodejs simonkolz/nodejs:latest'
+                        sh 'docker tag demonodejs:latest simonkolz/docker-node.js:1.0'
                         // Push the Docker image to Docker Hub
-                        sh 'docker push simonkolz/nodejs:latest'
+                        sh 'docker push simonkolz/docker-node.js:1.0'
+                    }
+                }
+            }
+        }
+        
+        stage('Docker run') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: '8491bc31-eedd-4abc-a070-d0c0e0aec1c5', toolName: 'Docker') {
+                        sh 'docker run -d --name demo-nodejs -p 8081:8081 simonkolz/docker-node.js:1.0'
                     }
                 }
             }
